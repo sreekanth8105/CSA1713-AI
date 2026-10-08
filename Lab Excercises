@@ -1,1 +1,176 @@
+1.import heapq
 
+GOAL = (1, 2, 3, 4, 5, 6, 7, 8, 0)
+
+MOVES = {
+    0: [1, 3],
+    1: [0, 2, 4],
+    2: [1, 5],
+    3: [0, 4, 6],
+    4: [1, 3, 5, 7],
+    5: [2, 4, 8],
+    6: [3, 7],
+    7: [4, 6, 8],
+    8: [5, 7]
+}
+
+def heuristic(state):
+    distance = 0
+
+    for i in range(9):
+        value = state[i]
+
+        if value != 0:
+            goal_index = value - 1
+            r1, c1 = divmod(i, 3)
+            r2, c2 = divmod(goal_index, 3)
+            distance += abs(r1 - r2) + abs(c1 - c2)
+
+    return distance
+
+def print_puzzle(state):
+    for i in range(0, 9, 3):
+        print(state[i:i + 3])
+    print()
+
+def get_neighbors(state):
+    blank = state.index(0)
+    neighbors = []
+
+    for new_pos in MOVES[blank]:
+        new_state = list(state)
+        new_state[blank], new_state[new_pos] = new_state[new_pos], new_state[blank]
+        neighbors.append(tuple(new_state))
+
+    return neighbors
+
+def is_solvable(state):
+    numbers = [x for x in state if x != 0]
+    inversions = 0
+
+    for i in range(len(numbers)):
+        for j in range(i + 1, len(numbers)):
+            if numbers[i] > numbers[j]:
+                inversions += 1
+
+    return inversions % 2 == 0
+
+def solve_puzzle(start):
+    if not is_solvable(start):
+        print("Puzzle is not solvable.")
+        return
+
+    queue = []
+    heapq.heappush(queue, (heuristic(start), 0, start, [start]))
+
+    visited = set()
+
+    while queue:
+        f, g, current, path = heapq.heappop(queue)
+
+        if current == GOAL:
+            print("Solution found")
+            print("Moves:", g)
+
+            for state in path:
+                print_puzzle(state)
+
+            return
+
+        if current in visited:
+            continue
+
+        visited.add(current)
+
+        for neighbor in get_neighbors(current):
+            if neighbor not in visited:
+                new_g = g + 1
+                new_f = new_g + heuristic(neighbor)
+                heapq.heappush(queue, (new_f, new_g, neighbor, path + [neighbor]))
+
+    print("No solution found")
+
+print("Enter 9 numbers:")
+values = list(map(int, input().split()))
+
+if len(values) == 9 and sorted(values) == list(range(9)):
+    initial_state = tuple(values)
+    solve_puzzle(initial_state)
+else:
+    print("Invalid input")
+2.def is_safe(board, row, col):
+    for i in range(row):
+        if board[i] == col:
+            return False
+        if abs(board[i] - col) == abs(i - row):
+            return False
+    return True
+
+def solve(board, row):
+    if row == 8:
+        print_board(board)
+        return True
+
+    for col in range(8):
+        if is_safe(board, row, col):
+            board[row] = col
+
+            if solve(board, row + 1):
+                return True
+
+            board[row] = -1
+
+    return False
+
+def print_board(board):
+    for row in range(8):
+        for col in range(8):
+            if board[row] == col:
+                print("Q", end=" ")
+            else:
+                print(".", end=" ")
+        print()
+
+board = [-1] * 8
+solve(board, 0)
+3.from collections import deque
+
+def water_jug(capacity1, capacity2, target):
+    queue = deque()
+    visited = set()
+
+    queue.append((0, 0))
+    visited.add((0, 0))
+
+    while queue:
+        jug1, jug2 = queue.popleft()
+
+        print(jug1, jug2)
+
+        if jug1 == target or jug2 == target:
+            print("Target reached")
+            return
+
+        states = [
+            (capacity1, jug2),
+            (jug1, capacity2),
+            (0, jug2),
+            (jug1, 0),
+            (jug1 - min(jug1, capacity2 - jug2),
+             jug2 + min(jug1, capacity2 - jug2)),
+            (jug1 + min(jug2, capacity1 - jug1),
+             jug2 - min(jug2, capacity1 - jug1))
+        ]
+
+        for state in states:
+            if state not in visited:
+                visited.add(state)
+                queue.append(state)
+
+    print("No solution")
+
+capacity1 = int(input("Enter capacity of jug 1: "))
+capacity2 = int(input("Enter capacity of jug 2: "))
+target = int(input("Enter target: "))
+
+water_jug(capacity1, capacity2, target)
