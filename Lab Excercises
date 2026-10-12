@@ -174,3 +174,118 @@ capacity2 = int(input("Enter capacity of jug 2: "))
 target = int(input("Enter target: "))
 
 water_jug(capacity1, capacity2, target)
+4.from itertools import permutations
+
+letters = 'SENDMORY'
+digits = '0123456789'
+
+for p in permutations(digits, len(letters)):
+    d = dict(zip(letters, p))
+
+    if d['S'] == '0' or d['M'] == '0':
+        continue
+
+    send = int(''.join(d[c] for c in 'SEND'))
+    more = int(''.join(d[c] for c in 'MORE'))
+    money = int(''.join(d[c] for c in 'MONEY'))
+
+    if send + more == money:
+        print("SEND =", send)
+        print("MORE =", more)
+        print("MONEY =", money)
+        break
+5.from collections import deque
+
+def solve():
+    start = (3, 3, 1)
+    goal = (0, 0, 0)
+    moves = [(1, 0), (2, 0), (0, 1), (0, 2), (1, 1)]
+
+    queue = deque([(start, [start])])
+    visited = {start}
+
+    while queue:
+        state, path = queue.popleft()
+        m, c, boat = state
+
+        if state == goal:
+            for s in path:
+                print(s)
+            return
+
+        for x, y in moves:
+            if boat == 1:
+                nm, nc, nb = m - x, c - y, 0
+            else:
+                nm, nc, nb = m + x, c + y, 1
+
+            if not (0 <= nm <= 3 and 0 <= nc <= 3):
+                continue
+
+            if (nm > 0 and nm < nc) or (3 - nm > 0 and 3 - nm < 3 - nc):
+                continue
+
+            new_state = (nm, nc, nb)
+
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, path + [new_state]))
+
+solve()
+6.rooms = {'A': 1, 'B': 1}
+position = 'A'
+
+while 1 in rooms.values():
+    if rooms[position] == 1:
+        print("Room", position, "is dirty. Cleaning...")
+        rooms[position] = 0
+    else:
+        print("Room", position, "is clean.")
+
+    position = 'B' if position == 'A' else 'A'
+
+print("All rooms are clean.")
+7.from collections import deque
+
+graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': [],
+    'F': []
+}
+
+def bfs(start):
+    visited = set()
+    queue = deque([start])
+
+    while queue:
+        node = queue.popleft()
+
+        if node not in visited:
+            print(node, end=" ")
+            visited.add(node)
+            queue.extend(graph[node])
+
+bfs('A')
+8.graph = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F'],
+    'D': [],
+    'E': [],
+    'F': []
+}
+
+visited = set()
+
+def dfs(node):
+    if node not in visited:
+        print(node, end=" ")
+        visited.add(node)
+
+        for neighbor in graph[node]:
+            dfs(neighbor)
+
+dfs('A')
