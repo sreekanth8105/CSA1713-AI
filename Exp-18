@@ -1,0 +1,6 @@
+
+person(prabhas, date(1, 8, 2005)).
+person(ravi, date(15, 5, 2004)).
+person(priya, date(10, 12, 2005)).
+person(rahul, date(20, 3, 2003)).
+person(anil, date(5, 6, 2004)).
