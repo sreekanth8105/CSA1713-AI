@@ -1,0 +1,74 @@
+import heapq
+
+goal = [1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+        13, 14, 15, 0]
+
+def manhattan(state):
+    distance = 0
+
+    for i, tile in enumerate(state):
+        if tile != 0:
+            x1, y1 = divmod(i, 4)
+            x2, y2 = divmod(tile - 1, 4)
+            distance += abs(x1 - x2) + abs(y1 - y2)
+
+    return distance
+
+def astar(start):
+    pq = []
+    heapq.heappush(pq, (manhattan(start), 0, start, []))
+
+    visited = set()
+
+    while pq:
+        f, g, state, path = heapq.heappop(pq)
+
+        if state == goal:
+            return path + [state]
+
+        if tuple(state) in visited:
+            continue
+
+        visited.add(tuple(state))
+
+        zero = state.index(0)
+        r, c = divmod(zero, 4)
+
+        moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+        for dr, dc in moves:
+            nr, nc = r + dr, c + dc
+
+            if 0 <= nr < 4 and 0 <= nc < 4:
+                new_pos = nr * 4 + nc
+                new_state = state[:]
+
+                new_state[zero], new_state[new_pos] = (
+                    new_state[new_pos], new_state[zero]
+                )
+
+                if tuple(new_state) not in visited:
+                    heapq.heappush(
+                        pq,
+                        (g + 1 + manhattan(new_state),
+                         g + 1, new_state, path + [state])
+                    )
+
+    return None
+
+start = [1, 2, 3, 4,
+         5, 6, 7, 8,
+         9, 10, 11, 12,
+         13, 0, 14, 15]
+
+solution = astar(start)
+
+if solution:
+    for step in solution:
+        for i in range(0, 16, 4):
+            print(step[i:i+4])
+        print()
+else:
+    print("No solution")
