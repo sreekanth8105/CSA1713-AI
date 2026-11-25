@@ -1,0 +1,9 @@
+symptom(john, fever).
+symptom(john, cough).
+symptom(mary, headache).
+symptom(mary, sneezing).
+
+diagnose(Patient, Disease) :-
+    symptom(Patient, fever), symptom(Patient, cough), Disease = flu, !;
+    symptom(Patient, sneezing), symptom(Patient, headache), Disease = cold, !;
+    Disease = unknown.
