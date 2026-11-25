@@ -1,0 +1,20 @@
+edge(s, a, 1).
+edge(s, b, 5).
+edge(a, g, 2).
+edge(b, g, 1).
+heuristic(s, 4).
+heuristic(a, 2).
+heuristic(b, 1).
+heuristic(g, 0).
+
+best_first(Start, Goal, Path) :-
+    explore([[Start]], Goal, RevPath),
+    reverse(RevPath, Path).
+
+explore([[Goal|Rest]|_], Goal, [Goal|Rest]).
+explore([[Current|Rest]|Queue], Goal, Path) :-
+    findall([Next, Current|Rest], (edge(Current, Next, _), \+ member(Next, [Current|Rest])), Children),
+    append(Queue, Children, NewQueue),
+    % Assume sort_by_heuristic/2 sorts paths based on heuristic value of head node
+    sort_by_heuristic(NewQueue, SortedQueue),
+    explore(SortedQueue, Goal, Path).
