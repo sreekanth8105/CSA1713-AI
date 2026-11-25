@@ -1,0 +1,16 @@
+:- dynamic fact/1.
+
+fact(is_raining).
+fact(has_umbrella).
+
+rule(stay_dry) :- fact(is_raining), fact(has_umbrella).
+rule(get_wet) :- fact(is_raining), \+ fact(has_umbrella).
+
+forward_chain :-
+    rule(NewFact),
+    \+ fact(NewFact),
+    assert(fact(NewFact)),
+    write('Derived new fact: '), write(NewFact), nl,
+    forward_chain.
+forward_chain :-
+    write('No more facts can be derived.'), nl.
