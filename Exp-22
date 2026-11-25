@@ -1,0 +1,8 @@
+bird(ostrich).
+bird(sparrow).
+bird(penguin).
+bird(eagle).
+
+can_fly(ostrich) :- !, fail.
+can_fly(penguin) :- !, fail.
+can_fly(X) :- bird(X).
