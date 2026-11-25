@@ -1,0 +1,11 @@
+disease(diabetes).
+disease(hypertension).
+disease(celiac).
+
+diet_advice(diabetes, 'Avoid sugar, eat more fiber.').
+diet_advice(hypertension, 'Reduce salt intake, eat potassium-rich foods.').
+diet_advice(celiac, 'Strict gluten-free diet.').
+
+suggest_diet(Disease, Advice) :-
+    disease(Disease),
+    diet_advice(Disease, Advice).
