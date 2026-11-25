@@ -1,0 +1,10 @@
+studies(john, cs101).
+studies(mary, math202).
+studies(mike, cs101).
+
+teaches(smith, cs101).
+teaches(jones, math202).
+
+student_teacher(Student, Teacher) :-
+    studies(Student, Subject),
+    teaches(Teacher, Subject).
