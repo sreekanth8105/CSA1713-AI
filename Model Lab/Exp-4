@@ -1,0 +1,22 @@
+
+% Facts
+fact(sunny).
+fact(warm).
+
+% Rules
+rule(can_go_out, [sunny, warm]).
+rule(can_play, [can_go_out]).
+
+% Inference Engine
+prove(X) :-
+    fact(X).
+
+prove(X) :-
+    rule(X, Conditions),
+    prove_all(Conditions).
+
+prove_all([]).
+
+prove_all([H|T]) :-
+    prove(H),
+    prove_all(T).
